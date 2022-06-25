@@ -78,14 +78,15 @@ func GetAll(params ...map[string]string) ([]*models.User, error) {
 			}
 		} 
 
-		query = fmt.Sprintf(`
-			SELECT * 
-			FROM users 
-			%s
-			LIMIT $1
-			OFFSET $2
-		`, where)
 	}
+	
+	query = fmt.Sprintf(`
+		SELECT * 
+		FROM users 
+		%s
+		LIMIT $1
+		OFFSET $2
+	`, where)
 
 	limit, err = strconv.Atoi(queryParams["limit"])
 	if err != nil {
