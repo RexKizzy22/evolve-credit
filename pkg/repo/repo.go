@@ -7,18 +7,18 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 	"evolve-credit/pkg/models"
 	"log"
 	"time"
 )
 
-func init() {
-	err := godotenv.Load("../../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
+// func init() {
+// 	err := godotenv.Load("../../.env")
+// 	if err != nil {
+// 		log.Fatal("Error loading .env file")
+// 	}
+// }
 
 type DBModel struct {
 	db *sql.DB
