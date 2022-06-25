@@ -1,11 +1,11 @@
-package main
+package utils 
 
 import (
 	"encoding/json"
 	"net/http"
 )
 
-func (app *application) writeJSON(w http.ResponseWriter, status int, data interface{}, wrap string) error {
+func WriteJSON(w http.ResponseWriter, status int, data interface{}, wrap string) error {
 	wrapper := make(map[string]interface{})
 
 	wrapper[wrap] = data
@@ -22,7 +22,7 @@ func (app *application) writeJSON(w http.ResponseWriter, status int, data interf
 	return nil
 }
 
-func (app *application) errorJSON(w http.ResponseWriter, err error, status ...int) {
+func ErrorJSON(w http.ResponseWriter, err error, status ...int) {
 	statusCode := http.StatusBadRequest
 	if len(status) > 0 {
 		statusCode = status[0]
@@ -35,5 +35,5 @@ func (app *application) errorJSON(w http.ResponseWriter, err error, status ...in
 		Message: err.Error(),
 	}
 
-	app.writeJSON(w, statusCode, theError, "error")
+	WriteJSON(w, statusCode, theError, "error")
 }
