@@ -8,11 +8,21 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/joho/godotenv"
 	"evolve-credit/pkg/routes"
 	"evolve-credit/pkg/utils"
 
 	_ "github.com/lib/pq"
 )
+
+
+
+func init() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+}
 
 type config struct {
 	port int
