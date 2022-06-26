@@ -8,7 +8,6 @@ import (
 	"strconv"
 
 	"evolve-credit/pkg/models"
-	"evolve-credit/pkg/utils"
 	"log"
 	"time"
 )
@@ -43,7 +42,7 @@ func GetAll(params ...map[string]string) ([]*models.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	db, err := openDB(utils.Getenv("POSTGRES_URI", os.Getenv("DATABASE_URL")))
+	db, err := openDB(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -115,7 +114,7 @@ func Get(email string) (*models.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	db, err := openDB(utils.Getenv("POSTGRES_URI", os.Getenv("DATABASE_URL")))
+	db, err := openDB(os.Getenv("DATABASE_URL"))
 	if err != nil {
 		log.Fatal(err)
 	}
