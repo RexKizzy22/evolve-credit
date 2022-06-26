@@ -7,18 +7,19 @@ import (
 	"os"
 	"strconv"
 
-	// "github.com/joho/godotenv"
+	"github.com/joho/godotenv"
 	"evolve-credit/pkg/models"
+	"evolve-credit/pkg/utils"
 	"log"
 	"time"
 )
 
-// func init() {
-// 	err := godotenv.Load("../../.env")
-// 	if err != nil {
-// 		log.Fatal("Error loading .env file")
-// 	}
-// }
+func init() {
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+}
 
 type DBModel struct {
 	db *sql.DB
@@ -50,7 +51,7 @@ func GetAll(params ...map[string]string) ([]*models.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	db, err := openDB(os.Getenv("DATABASE_URL"))
+	db, err := openDB(utils.Getenv("POSTGRES_URI", os.Getenv("DATABASE_URL")))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -68,13 +69,9 @@ func GetAll(params ...map[string]string) ([]*models.User, error) {
 		if from, ok := queryParams["from"]; ok {
 			if to, ok := queryParams["to"]; ok {
 				where = fmt.Sprintf(`
-					WHERE cast(date AS TIMESTAMP) >= cast('%s' AS TIMESTAMP) 
-					AND cast(date AS TIMESTAMP) <= cast('%s' AS TIMESTAMP)
-				`, from, to)
-				// where = fmt.Sprintf(`
-				// WHERE date::timestamp >= '%s'::timestamp AND  
-				// date::timestamp <= '%s'::timestamp`, 
-				// from, to)
+				WHERE date::timestamp >= '%s'::timestamp AND  
+				date::timestamp <= '%s'::timestamp`, 
+				from, to)
 			}
 		} 
 	}
@@ -92,7 +89,9 @@ func GetAll(params ...map[string]string) ([]*models.User, error) {
 		limit = defaultLimit
 	}
 	offset, _ := strconv.Atoi(queryParams["offset"])
-
+	if err != nil {
+		offset = 0
+	}
 
 	rows, err := model.db.QueryContext(ctx, query, limit, offset)
 	if err != nil {
@@ -124,7 +123,7 @@ func Get(email string) (*models.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	db, err := openDB(os.Getenv("DATABASE_URL"))
+	db, err := openDB(utils.Getenv("POSTGRES_URI", os.Getenv("DATABASE_URL")))
 	if err != nil {
 		log.Fatal(err)
 	}

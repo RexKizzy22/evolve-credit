@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"evolve-credit/pkg/routes"
+	"evolve-credit/pkg/utils"
 
 	_ "github.com/lib/pq"
 )
@@ -19,11 +20,11 @@ type config struct {
 }
 
 func main() {
-	port, err := strconv.Atoi(os.Getenv("PORT"))
+	port, err := strconv.Atoi(utils.Getenv("PORT", "4000"))
 	if err != nil {
 		log.Fatal("Unable to parse port: ", err)
 	}
-	
+
 	// Initialize application variables
 	cfg := config{
 		port: port,

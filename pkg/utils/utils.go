@@ -1,8 +1,9 @@
-package utils 
+package utils
 
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 )
 
 func WriteJSON(w http.ResponseWriter, status int, data interface{}, wrap string) error {
@@ -36,4 +37,13 @@ func ErrorJSON(w http.ResponseWriter, err error, status ...int) {
 	}
 
 	WriteJSON(w, statusCode, theError, "error")
+}
+
+func Getenv(key, value string) string {
+	val, ok := os.LookupEnv(key)
+	if ok {
+		return val
+	} else {
+		return value
+	}
 }
