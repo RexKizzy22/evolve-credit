@@ -68,8 +68,8 @@ func GetAll(params ...map[string]string) ([]*models.User, error) {
 		if from, ok := queryParams["from"]; ok {
 			if to, ok := queryParams["to"]; ok {
 				where = fmt.Sprintf(`
-					WHERE cast(date AS TIMESTAMP) >= cast(%s AS TIMESTAMP) 
-					AND cast(date AS TIMESTAMP) <= cast(%s AS TIMESTAMP)
+					WHERE cast(date AS TIMESTAMP) >= cast('%s' AS TIMESTAMP) 
+					AND cast(date AS TIMESTAMP) <= cast('%s' AS TIMESTAMP)
 				`, from, to)
 				// where = fmt.Sprintf(`
 				// WHERE date::timestamp >= '%s'::timestamp AND  
@@ -77,9 +77,8 @@ func GetAll(params ...map[string]string) ([]*models.User, error) {
 				// from, to)
 			}
 		} 
-
 	}
-	
+
 	query = fmt.Sprintf(`
 		SELECT * 
 		FROM users 
