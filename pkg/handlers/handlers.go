@@ -1,12 +1,18 @@
 package handlers
 
 import (
-	"github.com/julienschmidt/httprouter"
-	"evolve-credit/pkg/utils"
 	"evolve-credit/pkg/repo"
+	"evolve-credit/pkg/utils"
+	"io"
 	"log"
 	"net/http"
+
+	"github.com/julienschmidt/httprouter"
 )
+
+func Index(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "Welcome to Evolve Credit")
+}
 
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
