@@ -24,7 +24,7 @@ COPY --from=builder /app/main .
 
 COPY .env .
 
-# Expose port 8080 to the outside world
+# Expose port 4000 to the outside world
 EXPOSE 4000
 
 # Command to run the executable
