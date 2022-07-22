@@ -17,10 +17,10 @@ FROM alpine:latest
 
 RUN apk --no-cache add ca-certificates
 
-WORKDIR /root/
+WORKDIR /app
 
 # Copy the Pre-built binary file from the builder stage
-COPY --from=builder /app/main .
+COPY --from=builder /app/main ./app
 
 COPY .env .
 
@@ -28,4 +28,4 @@ COPY .env .
 EXPOSE 4000
 
 # Command to run the executable
-CMD ["./main"]
+CMD ["./app/main"]
