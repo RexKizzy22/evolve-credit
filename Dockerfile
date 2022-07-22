@@ -20,7 +20,7 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /app
 
 # Copy the Pre-built binary file from the builder stage
-COPY --from=builder /app/main ./app
+COPY --from=builder /app/main .
 
 COPY .env .
 
@@ -28,4 +28,4 @@ COPY .env .
 EXPOSE 4000
 
 # Command to run the executable
-CMD ["./app/main"]
+CMD ["./main"]

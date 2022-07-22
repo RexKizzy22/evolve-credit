@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    build: ./postgres
+    environment:
+      - POSTGRES_PASSWORD=evolve-credit
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=evolve-credit
+    ports:
+      - 5432:5432
+    volumes: 
+      - ./:/evolve-credit 
+
+  api:
+    build:
+      context:  .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      - DB_SOURCE=postgresql://postgres:evolve-credit@postgres:5432/evolve-credit?sslmode=disable
+
+volumes:
+  evolve-credit:
