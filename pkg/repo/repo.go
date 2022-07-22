@@ -39,7 +39,7 @@ func openDB(conString string) (*sql.DB, error) {
 }
 
 func GetAll(params ...map[string]string) ([]*models.User, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	db, err := openDB(os.Getenv("DATABASE_URL"))
@@ -48,24 +48,35 @@ func GetAll(params ...map[string]string) ([]*models.User, error) {
 	}
 	defer db.Close()
 
+	queryParams := params[0]
 	model := newModel(db)
 	where := ""
 	query := ""
 	defaultLimit := 10
-	var queryParams map[string]string 
+	defaultOffset := 0
 	var limit int
+	var offset int
 
-	if len(params) > 0 {
-		queryParams = params[0]
-		if from, ok := queryParams["from"]; ok {
-			if to, ok := queryParams["to"]; ok {
-				where = fmt.Sprintf(`
-				WHERE date::timestamp >= '%s'::timestamp AND  
-				date::timestamp <= '%s'::timestamp`, 
-				from, to)
-			}
-		} 
+	if from := queryParams["from"]; from != "" {
+		if to := queryParams["to"]; to != "" {
+			where = fmt.Sprintf(`
+			WHERE date::timestamp >= '%s'::timestamp AND  
+			date::timestamp <= '%s'::timestamp`, 
+			from, to)
+		}
+	} 
+
+	// Set to default limit if value was not provided
+	limit, err = strconv.Atoi(queryParams["limit"])
+	if err != nil {
+		limit = defaultLimit
 	}
+
+	// Set to default offset if value was not provided
+	offset, err = strconv.Atoi(queryParams["offset"])
+	if err != nil {
+		offset = defaultOffset
+	} 
 
 	query = fmt.Sprintf(`
 		SELECT * 
@@ -74,15 +85,6 @@ func GetAll(params ...map[string]string) ([]*models.User, error) {
 		LIMIT $1
 		OFFSET $2
 	`, where)
-
-	limit, err = strconv.Atoi(queryParams["limit"])
-	if err != nil {
-		limit = defaultLimit
-	}
-	offset, _ := strconv.Atoi(queryParams["offset"])
-	if err != nil {
-		offset = 0
-	}
 
 	rows, err := model.db.QueryContext(ctx, query, limit, offset)
 	if err != nil {
@@ -128,11 +130,7 @@ func Get(email string) (*models.User, error) {
 		WHERE email = $1
 	`
 
-	row, err := model.db.QueryContext(ctx, query, email)
-	if err != nil {
-		return nil, err
-	}
-	defer row.Close()
+	row := model.db.QueryRowContext(ctx, query, email)
 
 	var user models.User
 

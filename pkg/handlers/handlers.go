@@ -34,7 +34,6 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 		utils.ErrorJSON(w, err)
 		return
 	}
-	return
 }
 
 func GetUserByEmail(w http.ResponseWriter, r *http.Request) {
@@ -44,7 +43,7 @@ func GetUserByEmail(w http.ResponseWriter, r *http.Request) {
 
 	user, err := repo.Get(email)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalln("could not retrieve user", err)
 	}
 
 	err = utils.WriteJSON(w, http.StatusOK, user, "user")
