@@ -6,8 +6,6 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 
-RUN go mod download
-
 COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
@@ -22,7 +20,11 @@ WORKDIR /app
 # Copy the Pre-built binary file from the builder stage
 COPY --from=builder /app/main .
 
+COPY ./postgres .
+
 COPY .env .
+
+COPY wait-for.sh .
 
 # Expose port 4000 to the outside world
 EXPOSE 4000

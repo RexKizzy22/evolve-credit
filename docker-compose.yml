@@ -21,6 +21,10 @@ services:
       - 4000:4000
     environment:
       - DB_SOURCE=postgresql://postgres:evolve-credit@postgres:5432/evolve-credit?sslmode=disable
+    depends_on:
+      - postgres
+    entrypoint: [ "/app/wait-for.sh", "postgres:5432", "--" ]
+    command: [ "/app/main" ]
 
 volumes:
   evolve-credit:
