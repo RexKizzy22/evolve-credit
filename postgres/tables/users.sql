@@ -5,7 +5,7 @@ CREATE TABLE users (
     name VARCHAR(50) NOT NULL,
     email TEXT UNIQUE NOT NULL,
     date DATE NOT NULL,
-    country VARCHAR NOT NULL,
+    country VARCHAR NOT NULL
 );
 
 INSERT INTO users (name, email, date, country) 

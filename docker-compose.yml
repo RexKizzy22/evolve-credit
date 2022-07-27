@@ -11,11 +11,11 @@ services:
     ports:
       - 5432:5432
     volumes: 
-      - ./:/evolve-credit 
+      - ./postgres/data:/app/postgres/data
 
   api:
     build:
-      context:  .
+      context: ./
       dockerfile: Dockerfile
     ports:
       - 4000:4000
@@ -23,8 +23,8 @@ services:
       - DB_SOURCE=postgresql://postgres:evolve-credit@postgres:5432/evolve-credit?sslmode=disable
     depends_on:
       - postgres
-    entrypoint: [ "/app/wait-for.sh", "postgres:5432", "--" ]
-    command: [ "/app/main" ]
+    command: ["./main"]
+    entrypoint: ["./wait-for.sh", "postgres:5432", "--"]
 
 volumes:
-  evolve-credit:
+  data:
